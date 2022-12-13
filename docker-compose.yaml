@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  db:
+    image: mongo
+    volumes:
+      - data:/data/db
+    env_file:
+      - .env
+    ports:
+      - "27017:27017"
+
+  backend:
+    env_file:
+      - .env
+    build:
+      context: ./docker_node
+      dockerfile: backend.dockerfile
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: ./docker_react
+      dockerfile: frontend.dockerfile
+    ports:
+      - "3000:3000"
+
+volumes:
+  data:
