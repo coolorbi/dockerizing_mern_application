@@ -3,9 +3,7 @@ services:
   db:
     image: mongo
     volumes:
-      - data:/data/db
-    env_file:
-      - .env
+      - db_data:/data/db
     ports:
       - "27017:27017"
 
@@ -17,6 +15,10 @@ services:
       dockerfile: backend.dockerfile
     ports:
       - "5000:5000"
+    depends_on:
+      - db
+    volumes:
+      - ./docker_node/src:/app/src
 
   frontend:
     build:
@@ -24,6 +26,12 @@ services:
       dockerfile: frontend.dockerfile
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./docker_react/src:/app/src
 
 volumes:
-  data:
+  db_data:
